@@ -18,6 +18,16 @@ import OlivOS
 import OlivaStoryCore
 import OlivaDiceCore
 
+def logProc(Proc:OlivOS.pluginAPI.shallow, level, message, segment):
+    Proc.log(
+        log_level = level,
+        log_message = message,
+        log_segment = segment
+    )
+
+def globalLog(level, message, segment):
+    if OlivaStoryCore.data.gProc is not None:
+        logProc(OlivaStoryCore.data.gProc, level, message, segment)
 
 def unity_init(plugin_event, Proc):
     pass

@@ -55,6 +55,11 @@ def initStoryListByBotHash(botHash:str):
                     objStoryThis = json.loads(filePath_fs)
         except:
             traceback.print_exc()
+            OlivaStoryCore.msgReply.globalLog(
+                level = 3,
+                message = f'扩展故事文件加载失败: {filePath}',
+                segment = [('OlivaStory', 'default'), ('Init', 'default')]
+            )
         if type(objStoryThis) is dict \
         and 'name' in objStoryThis \
         and type(objStoryThis['name']) is str \
@@ -62,6 +67,11 @@ def initStoryListByBotHash(botHash:str):
         and 'story' in objStoryThis \
         and type(objStoryThis['story']) is list:
             storyList[botHash][objStoryThis['name']] = copy.deepcopy(objStoryThis)
+            OlivaStoryCore.msgReply.globalLog(
+                level = 2,
+                message = f'扩展故事文件已加载: {objStoryThis["name"]}',
+                segment = [('OlivaStory', 'default'), ('Init', 'default')]
+            )
     if botHash != 'unity':
         for objStoryName in storyList['unity']:
             storyListThis = storyList['unity'][objStoryName]
