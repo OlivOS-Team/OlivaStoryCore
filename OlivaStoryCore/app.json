@@ -1,0 +1,18 @@
+{
+    "name" : "OlivaStory核心模块",
+    "author" : "lunzhiPenxil",
+    "namespace" : "OlivaStoryCore",
+    "message_mode" : "old_string",
+    "info" : "本模块为OlivaStory的核心模块，实现了文游引擎的主要功能。",
+    "version" : "3.0.0",
+    "svn" : 1,
+    "compatible_svn" : 101,
+    "priority" : 20045,
+    "support" : [
+        {
+            "sdk" : "all",
+            "platform" : "all",
+            "model" : "all"
+        }
+    ]
+}
