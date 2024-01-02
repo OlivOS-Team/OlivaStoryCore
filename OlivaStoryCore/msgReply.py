@@ -18,6 +18,9 @@ import OlivOS
 import OlivaStoryCore
 import OlivaDiceCore
 
+import traceback
+import json
+
 def logProc(Proc:OlivOS.pluginAPI.shallow, level, message, segment):
     Proc.log(
         log_level = level,
@@ -222,12 +225,12 @@ def unity_reply(plugin_event, Proc):
                         selectionIndex = tmp_go_index
                     )
                     tmp_reply_str = getStoryTall(
+                        plugin_event = plugin_event,
                         dictStrCustom = dictStrCustom,
                         dictTValue = dictTValue,
                         nodeData = tmp_nodeData,
                         noteList = tmp_noteList
                     )
-                    replyMsg(plugin_event, tmp_reply_str)
                     if OlivaStoryCore.storyEngine.isStoryEnd(tmp_nodeData):
                         OlivaStoryCore.storyEngine.runStoryBySelectionIndex(
                             botHash = tmp_botHash,
@@ -247,13 +250,13 @@ def unity_reply(plugin_event, Proc):
                     chatToken = tmp_chat_token
                 )
                 tmp_reply_str = getStoryTall(
+                    plugin_event = plugin_event,
                     dictStrCustom = dictStrCustom,
                     dictTValue = dictTValue,
                     nodeData = tmp_nodeData,
                     flagIsStart = True,
                     noteList = tmp_noteList
                 )
-                replyMsg(plugin_event, tmp_reply_str)
         else:
             tmp_platform = plugin_event.platform['platform']
             tmp_botHash = plugin_event.bot_info.hash
@@ -292,13 +295,12 @@ def unity_reply(plugin_event, Proc):
                         selectionIndex = 'ra'
                     )
                     tmp_reply_str = getStoryTall(
+                        plugin_event = plugin_event,
                         dictStrCustom = dictStrCustom,
                         dictTValue = dictTValue,
                         nodeData = tmp_nodeData,
                         noteList = tmp_noteList
                     )
-                    if tmp_reply_str is not None:
-                        replyMsg(plugin_event, tmp_reply_str)
                     if OlivaStoryCore.storyEngine.isStoryEnd(tmp_nodeData):
                         OlivaStoryCore.storyEngine.runStoryBySelectionIndex(
                             botHash = tmp_botHash,
@@ -338,13 +340,12 @@ def unity_reply(plugin_event, Proc):
                     selectionIndex = tmp_go_index
                 )
                 tmp_reply_str = getStoryTall(
+                    plugin_event = plugin_event,
                     dictStrCustom = dictStrCustom,
                     dictTValue = dictTValue,
                     nodeData = tmp_nodeData,
                     noteList = tmp_noteList
                 )
-                if tmp_reply_str is not None:
-                    replyMsg(plugin_event, tmp_reply_str)
                 if OlivaStoryCore.storyEngine.isStoryEnd(tmp_nodeData):
                     OlivaStoryCore.storyEngine.runStoryBySelectionIndex(
                         botHash = tmp_botHash,
@@ -368,12 +369,17 @@ def getNoteList(
     return res
 
 def getStoryTall(
+    plugin_event,
     dictStrCustom,
     dictTValue,
     nodeData,
     flagIsStart = False,
     noteList = None
 ):
+    selection_str_list = []
+    tmp_platform = plugin_event.platform['platform']
+    tmp_model = plugin_event.platform['model']
+    replyMsg = OlivaDiceCore.msgReply.replyMsg
     res = OlivaDiceCore.msgCustomManager.formatReplySTR(dictStrCustom['strStoryCoreStoryTallBreak'], dictTValue)
     if flagIsStart:
         res = OlivaDiceCore.msgCustomManager.formatReplySTR(dictStrCustom['strStoryCoreStoryTallNone'], dictTValue)
@@ -401,7 +407,9 @@ def getStoryTall(
                             storyNoteList = noteList
                         )
                     ):
-                        tmp_selection_list.append(f"{i + 1} - {selection[i]['text']}")
+                        tmp_str = f"{i + 1} - {selection[i]['text']}"
+                        tmp_selection_list.append(tmp_str)
+                        selection_str_list.append([f"{i + 1}", tmp_str])
                 if len(tmp_selection_list) > 0:
                     dictTValue['tStoryCoreSelection'] = '选项如下：\n%s' % ('\n'.join(tmp_selection_list))
                 else:
@@ -414,4 +422,64 @@ def getStoryTall(
             dictTValue['tStoryCoreSelection'] = '使用[.ra]指令完成检定以继续'
         dictTValue['tStoryCoreResult'] = nodeData.get('text', [])
         res = OlivaDiceCore.msgCustomManager.formatReplySTR(dictStrCustom['strStoryCoreStoryTall'], dictTValue)
+    if res is not None:
+        replyMsg(plugin_event, res)
+    if len(selection_str_list) > 0:
+        if tmp_platform == 'kaiheila' \
+        and tmp_model not in ['text']:
+            try:
+                if plugin_event.indeAPI.hasAPI('create_message'):
+                    msg_button_list = [
+                        {
+                            "type": "action-group",
+                            "elements": [
+                                {
+                                    "type": "button",
+                                    "theme": "info",
+                                    "value": f'{selection_str[0]}',
+                                    "click": "return-val",
+                                    "text": {
+                                        "type": "plain-text",
+                                        "content": f'{selection_str[1]}'
+                                    }
+                                }
+                            ]
+                        } for selection_str in selection_str_list
+                    ]
+                    msg_button_list.append(
+                        {
+                            "type": "context",
+                            "elements": [
+                                {
+                                  "type": "plain-text",
+                                  "content": "OlivaDice - 青果核心掷骰机器人"
+                                }
+                            ]
+                        }
+                    )
+                    msg_list = [
+                        {
+                            "type": "card",
+                            "theme": "primary",
+                            "color": "#009FE9",
+                            "size": "lg",
+                            "modules": msg_button_list
+                        }
+                    ]
+                    if plugin_event.plugin_info['func_type'] == 'group_message':
+                        plugin_event.indeAPI.create_message(
+                            chat_type = 'group',
+                            chat_id = plugin_event.data.group_id,
+                            content_type = 10,
+                            content = json.dumps(msg_list, ensure_ascii=False)
+                        )
+                    elif plugin_event.plugin_info['func_type'] == 'private_message':
+                        plugin_event.indeAPI.create_message(
+                            chat_type = 'private',
+                            chat_id = plugin_event.data.user_id,
+                            content_type = 10,
+                            content = json.dumps(msg_list, ensure_ascii=False)
+                        )
+            except Exception as e:
+                traceback.print_exc()
     return res
