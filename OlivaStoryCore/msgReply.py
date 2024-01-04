@@ -269,7 +269,7 @@ def unity_reply(plugin_event, Proc):
                     if tmp_reply_str != None:
                         replyMsg(plugin_event, tmp_reply_str)
             else:
-                tmp_reply_str = OlivaDiceCore.helpDoc.getHelp('story', plugin_event.bot_info.hash)
+                tmp_reply_str = OlivaDiceCore.helpDoc.getHelp('story', tmp_botHash)
                 if tmp_reply_str != None:
                     replyMsg(plugin_event, tmp_reply_str)
         else:
