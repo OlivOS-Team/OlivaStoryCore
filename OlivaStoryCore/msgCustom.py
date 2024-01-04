@@ -28,7 +28,8 @@ dictStrCustom = {
     'strStoryCoreStoryTall': '{tStoryCoreResult}\n\n{tStoryCoreSelection}',
     'strStoryCoreStoryTallNone': '故事不存在',
     'strStoryCoreStoryTallBreak': '故事中断了',
-    'strStoryCoreStoryTallEnd': '故事结束了'
+    'strStoryCoreStoryTallEnd': '故事结束了',
+    'strStoryCoreStoryRecommend': '未找到故事，您可能想要的是：\n{tStoryCoreRecommend}'
 }
 
 dictStrConst = {}
@@ -37,9 +38,27 @@ dictGValue = {}
 
 dictTValue = {
     'tStoryCoreResult': 'N/A',
-    'tStoryCoreSelection': 'N/A'
+    'tStoryCoreSelection': 'N/A',
+    'tStoryCoreRecommend': 'N/A'
 }
 
-dictHelpDocTemp = {}
+dictHelpDocTemp = {
+    'story': '''故事引擎模块:
+[.story [故事名称]]    开启对应的故事
+[.story end]    结束故事''',
+
+    'OlivaStoryCore': '''[OlivaStoryCore]
+OlivaStory核心模块
+本模块为青果跑团掷骰机器人(OlivaDice)的故事引擎模块，新一代文游引擎，它的设计初衷是为了让骰主能够更加方便地进行文游的设计，以文游的方式进行带团。
+核心开发者: lunzhiPenxil仑质
+[.help OlivaStoryCore更新] 查看本模块更新日志
+注: 本模块为可选模块。''',
+
+    'OlivaStoryCore更新': '''[OlivaStoryCore]
+3.0.1: 优化体验
+3.0.0: 初始化项目''',
+
+    '故事引擎': '&story',
+}
 
 dictUserConfigNoteDefault = {}

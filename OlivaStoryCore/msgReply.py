@@ -249,14 +249,29 @@ def unity_reply(plugin_event, Proc):
                     storyName = tmp_story_name,
                     chatToken = tmp_chat_token
                 )
-                tmp_reply_str = getStoryTall(
-                    plugin_event = plugin_event,
-                    dictStrCustom = dictStrCustom,
-                    dictTValue = dictTValue,
-                    nodeData = tmp_nodeData,
-                    flagIsStart = True,
-                    noteList = tmp_noteList
-                )
+                if tmp_nodeData is not None:
+                    tmp_reply_str = getStoryTall(
+                        plugin_event = plugin_event,
+                        dictStrCustom = dictStrCustom,
+                        dictTValue = dictTValue,
+                        nodeData = tmp_nodeData,
+                        flagIsStart = True,
+                        noteList = tmp_noteList
+                    )
+                else:
+                    tmp_reply_str = None
+                    searchList = getStorySearchList(tmp_story_name, tmp_botHash)
+                    if len(searchList) > 0:
+                        dictTValue['tStoryCoreRecommend'] = '\n'.join([f'[.story {storyName_this}]' for storyName_this in searchList])
+                        tmp_reply_str = OlivaDiceCore.msgCustomManager.formatReplySTR(dictStrCustom['strStoryCoreStoryRecommend'], dictTValue)
+                    else:
+                        tmp_reply_str = OlivaDiceCore.msgCustomManager.formatReplySTR(dictStrCustom['strStoryCoreStoryTallNone'], dictTValue)
+                    if tmp_reply_str != None:
+                        replyMsg(plugin_event, tmp_reply_str)
+            else:
+                tmp_reply_str = OlivaDiceCore.helpDoc.getHelp('story', plugin_event.bot_info.hash)
+                if tmp_reply_str != None:
+                    replyMsg(plugin_event, tmp_reply_str)
         else:
             tmp_platform = plugin_event.platform['platform']
             tmp_botHash = plugin_event.bot_info.hash
@@ -482,4 +497,26 @@ def getStoryTall(
                         )
             except Exception as e:
                 traceback.print_exc()
+    return res
+
+def getStorySearchList(storyName_search:str, botHash:str):
+    res = []
+    tmp_RecommendRank_list = []
+    if botHash in OlivaStoryCore.storyEngine.storyList:
+        for storyName_this in OlivaStoryCore.storyEngine.storyList[botHash]:
+            tmp_RecommendRank_list.append([
+                OlivaDiceCore.helpDoc.getRecommendRank(
+                    storyName_search,
+                    storyName_this
+                ),
+                storyName_this
+            ])
+        tmp_RecommendRank_list.sort(key = lambda x : x[0])
+    tmp_count_max = min(8, len(tmp_RecommendRank_list))
+    count = 0
+    while count < tmp_count_max:
+        if tmp_RecommendRank_list[count][0] < 1000:
+            if len(tmp_RecommendRank_list[count][1]) < 25:
+                res.append(tmp_RecommendRank_list[count][1])
+        count += 1
     return res
