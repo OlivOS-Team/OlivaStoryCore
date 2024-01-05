@@ -20,6 +20,7 @@ import OlivaDiceCore
 
 import traceback
 import json
+import uuid
 
 def logProc(Proc:OlivOS.pluginAPI.shallow, level, message, segment):
     Proc.log(
@@ -444,41 +445,39 @@ def getStoryTall(
         and tmp_model not in ['text']:
             try:
                 if plugin_event.indeAPI.hasAPI('create_message'):
-                    msg_button_list = [
-                        {
-                            "type": "action-group",
-                            "elements": [
-                                {
-                                    "type": "button",
-                                    "theme": "info",
-                                    "value": f'{selection_str[0]}',
-                                    "click": "return-val",
-                                    "text": {
-                                        "type": "plain-text",
-                                        "content": f'{selection_str[1]}'
-                                    }
-                                }
-                            ]
-                        } for selection_str in selection_str_list
-                    ]
-                    msg_button_list.append(
-                        {
-                            "type": "context",
-                            "elements": [
-                                {
-                                  "type": "plain-text",
-                                  "content": "OlivaDice - 青果核心掷骰机器人"
-                                }
-                            ]
-                        }
-                    )
                     msg_list = [
                         {
                             "type": "card",
                             "theme": "primary",
                             "color": "#009FE9",
                             "size": "lg",
-                            "modules": msg_button_list
+                            "modules": [
+                                {
+                                    "type": "action-group",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "theme": "info",
+                                            "value": f'{selection_str[0]}',
+                                            "click": "return-val",
+                                            "text": {
+                                                "type": "plain-text",
+                                                "content": f'{selection_str[1]}'
+                                            }
+                                        }
+                                    ]
+                                } for selection_str in selection_str_list
+                            ] + [
+                                {
+                                    "type": "context",
+                                    "elements": [
+                                        {
+                                          "type": "plain-text",
+                                          "content": "OlivaDice - 青果核心掷骰机器人"
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                     if plugin_event.plugin_info['func_type'] == 'group_message':
@@ -494,6 +493,41 @@ def getStoryTall(
                             chat_id = plugin_event.data.user_id,
                             content_type = 10,
                             content = json.dumps(msg_list, ensure_ascii=False)
+                        )
+            except Exception as e:
+                traceback.print_exc()
+        
+        elif tmp_platform == 'mhyVila':
+            try:
+                if plugin_event.indeAPI.hasAPI('create_message'):
+                    msg_list = {
+                        "content": {
+                            "text": "选项如下："
+                        },
+                        "panel": {
+                            "big_component_group_list": [
+                                [
+                                    {
+                                        "id": str(uuid.uuid4()),
+                                        "text": f'{selection_str[1][:9]}...' if len(selection_str[1]) > 12 else f'{selection_str[1]}',
+                                        "type": 1,
+                                        "extra": f'{selection_str[0]}',
+                                        "need_callback": False,
+                                        "c_type": 2,
+                                        "input": f'{selection_str[0]}',
+                                        "link": ""
+                                    }
+                                ] for selection_str in selection_str_list
+                            ]
+                        }
+                    }
+                    if plugin_event.plugin_info['func_type'] == 'group_message':
+                        plugin_event.indeAPI.create_message(
+                            chat_type = 'group',
+                            chat_id = plugin_event.data.group_id,
+                            object_name = 'MHY:Text',
+                            content = msg_list,
+                            host_id = plugin_event.data.host_id
                         )
             except Exception as e:
                 traceback.print_exc()
