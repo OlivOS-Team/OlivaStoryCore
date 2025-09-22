@@ -4,8 +4,8 @@
     "namespace" : "OlivaStoryCore",
     "message_mode" : "old_string",
     "info" : "本模块为OlivaStory的核心模块，实现了文游引擎的主要功能。",
-    "version" : "3.0.1",
-    "svn" : 2,
+    "version" : "3.0.2",
+    "svn" : 3,
     "compatible_svn" : 101,
     "priority" : 20045,
     "support" : [
