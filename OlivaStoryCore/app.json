@@ -6,7 +6,7 @@
     "info" : "本模块为OlivaStory的核心模块，实现了文游引擎的主要功能。",
     "version" : "3.0.4",
     "svn" : 5,
-    "compatible_svn" : 101,
+    "compatible_svn" : 190,
     "priority" : 20045,
     "support" : [
         {
