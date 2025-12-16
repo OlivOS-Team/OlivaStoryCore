@@ -15,8 +15,8 @@ _  / / /_  /  __  / __ | / /__  /| |_  / / /__  / _  /    __  __/
 '''
 
 
-OlivaStoryCore_ver = '3.0.4'
-OlivaStoryCore_svn = 5
+OlivaStoryCore_ver = '3.0.5'
+OlivaStoryCore_svn = 6
 OlivaStoryCore_ver_short = '%s(%s)' % (str(OlivaStoryCore_ver), str(OlivaStoryCore_svn))
 
 dataDirRoot = './plugin/data/OlivaStory'
