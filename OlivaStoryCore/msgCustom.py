@@ -51,12 +51,7 @@ dictHelpDocTemp = {
 OlivaStory核心模块
 本模块为青果跑团掷骰机器人(OlivaDice)的故事引擎模块，新一代文游引擎，它的设计初衷是为了让骰主能够更加方便地进行文游的设计，以文游的方式进行带团。
 核心开发者: lunzhiPenxil仑质
-[.help OlivaStoryCore更新] 查看本模块更新日志
 注: 本模块为可选模块。''',
-
-    'OlivaStoryCore更新': '''[OlivaStoryCore]
-3.0.1: 优化体验
-3.0.0: 初始化项目''',
 
     '故事引擎': '&story',
 }
