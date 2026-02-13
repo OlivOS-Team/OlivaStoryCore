@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
-'''
+"""
 _______________________    _________________________________________
 __  __ \__  /____  _/_ |  / /__    |__  __ \___  _/_  ____/__  ____/
-_  / / /_  /  __  / __ | / /__  /| |_  / / /__  / _  /    __  __/   
-/ /_/ /_  /____/ /  __ |/ / _  ___ |  /_/ /__/ /  / /___  _  /___   
-\____/ /_____/___/  _____/  /_/  |_/_____/ /___/  \____/  /_____/   
+_  / / /_  /  __  / __ | / /__  /| |_  / / /__  / _  /    __  __/
+/ /_/ /_  /____/ /  __ |/ / _  ___ |  /_/ /__/ /  / /___  _  /___
+\____/ /_____/___/  _____/  /_/  |_/_____/ /___/  \____/  /_____/
 
 @File      :   userConfig.py
 @Author    :   lunzhiPenxil仑质
@@ -12,16 +12,13 @@ _  / / /_  /  __  / __ | / /__  /| |_  / / /__  / _  /    __  __/
 @License   :   AGPL
 @Copyright :   (C) 2020-2021, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivaDiceCore
 import OlivaStoryCore
 
-dictUserConfigNoteDefault = {
-    'storyRuntime' : None
-}
+dictUserConfigNoteDefault = {'storyRuntime': None}
+
 
 def initUserConfigNoteDefault(bot_info_dict):
-    OlivaDiceCore.userConfig.dictUserConfigNoteDefault.update(
-        OlivaStoryCore.userConfig.dictUserConfigNoteDefault
-    )
+    OlivaDiceCore.userConfig.dictUserConfigNoteDefault.update(OlivaStoryCore.userConfig.dictUserConfigNoteDefault)
