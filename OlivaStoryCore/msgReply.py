@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-"""
+r"""
 _______________________    _________________________________________
 __  __ \__  /____  _/_ |  / /__    |__  __ \___  _/_  ____/__  ____/
 _  / / /_  /  __  / __ | / /__  /| |_  / / /__  / _  /    __  __/
@@ -10,7 +10,7 @@ _  / / /_  /  __  / __ | / /__  /| |_  / / /__  / _  /    __  __/
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2021, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
@@ -61,17 +61,17 @@ def unity_reply(plugin_event, Proc):
     skipToRight = OlivaDiceCore.msgReply.skipToRight
     msgIsCommand = OlivaDiceCore.msgReply.msgIsCommand
 
-    tmp_at_str = OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ()
+    tmp_at_str = OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ()  # NOQA: F841
     tmp_id_str = str(plugin_event.base_info['self_id'])
     tmp_at_str_sub = None
     tmp_id_str_sub = None
     if 'sub_self_id' in plugin_event.data.extend:
-        if plugin_event.data.extend['sub_self_id'] != None:
-            tmp_at_str_sub = OlivOS.messageAPI.PARA.at(plugin_event.data.extend['sub_self_id']).CQ()
+        if plugin_event.data.extend['sub_self_id'] is not None:
+            tmp_at_str_sub = OlivOS.messageAPI.PARA.at(plugin_event.data.extend['sub_self_id']).CQ()  # NOQA: F841
             tmp_id_str_sub = str(plugin_event.data.extend['sub_self_id'])
-    tmp_command_str_1 = '.'
-    tmp_command_str_2 = '。'
-    tmp_command_str_3 = '/'
+    tmp_command_str_1 = '.'  # NOQA: F841
+    tmp_command_str_2 = '。'  # NOQA: F841
+    tmp_command_str_3 = '/'  # NOQA: F841
     tmp_reast_str = plugin_event.data.message
     flag_force_reply = False
     flag_is_command = False
@@ -80,7 +80,7 @@ def unity_reply(plugin_event, Proc):
     flag_is_from_group_admin = False
     flag_is_from_group_sub_admin = False
     flag_is_from_group_have_admin = False
-    flag_is_from_master = False
+    flag_is_from_master = False  # NOQA: F841
     if isMatchWordStart(tmp_reast_str, '[CQ:reply,id='):
         tmp_reast_str = skipToRight(tmp_reast_str, ']')
         tmp_reast_str = tmp_reast_str[1:]
@@ -115,7 +115,7 @@ def unity_reply(plugin_event, Proc):
     tmp_hagID = None
     tmp_userId = plugin_event.data.user_id
     if plugin_event.plugin_info['func_type'] == 'group_message':
-        if plugin_event.data.host_id != None:
+        if plugin_event.data.host_id is not None:
             flag_is_from_host = True
         flag_is_from_group = True
     elif plugin_event.plugin_info['func_type'] == 'private_message':
@@ -128,19 +128,19 @@ def unity_reply(plugin_event, Proc):
     if flag_is_command:
         tmp_hagID = None
         if plugin_event.plugin_info['func_type'] == 'group_message':
-            if plugin_event.data.host_id != None:
+            if plugin_event.data.host_id is not None:
                 flag_is_from_host = True
             flag_is_from_group = True
         elif plugin_event.plugin_info['func_type'] == 'private_message':
             flag_is_from_group = False
         if flag_is_from_group:
             if 'role' in plugin_event.data.sender:
-                flag_is_from_group_have_admin = True
+                flag_is_from_group_have_admin = True  # NOQA: F841
                 if plugin_event.data.sender['role'] in ['owner', 'admin']:
                     flag_is_from_group_admin = True
                 elif plugin_event.data.sender['role'] in ['sub_admin']:
-                    flag_is_from_group_admin = True
-                    flag_is_from_group_sub_admin = True
+                    flag_is_from_group_admin = True  # NOQA: F841
+                    flag_is_from_group_sub_admin = True  # NOQA: F841
         if flag_is_from_host and flag_is_from_group:
             tmp_hagID = '%s|%s' % (str(plugin_event.data.host_id), str(plugin_event.data.group_id))
         elif flag_is_from_group:
@@ -227,7 +227,7 @@ def unity_reply(plugin_event, Proc):
                 tmp_go_index = tmp_reast_str
                 try:
                     tmp_go_index = int(tmp_go_index)
-                except:
+                except Exception:
                     tmp_go_index = None
                 if tmp_go_index is not None:
                     tmp_go_index = tmp_go_index - 1
@@ -286,7 +286,7 @@ def unity_reply(plugin_event, Proc):
                         tmp_reply_str = OlivaDiceCore.msgCustomManager.formatReplySTR(
                             dictStrCustom['strStoryCoreStoryTallNone'], dictTValue
                         )
-                    if tmp_reply_str != None:
+                    if tmp_reply_str is not None:
                         replyMsg(plugin_event, tmp_reply_str)
             else:
                 OlivaDiceCore.msgReply.replyMsgLazyHelpByEvent(plugin_event, 'story')
@@ -350,7 +350,7 @@ def unity_reply(plugin_event, Proc):
             tmp_go_index = tmp_reast_str
             try:
                 tmp_go_index = int(tmp_go_index)
-            except:
+            except Exception:
                 tmp_go_index = None
             if tmp_go_index is not None:
                 tmp_go_index = tmp_go_index - 1
@@ -405,7 +405,7 @@ def getStoryTall(plugin_event, dictStrCustom, dictTValue, nodeData, flagIsStart=
         )
         selection = OlivaStoryCore.storyEngine.getStoryNodeDataForStoryData(dataKey='selection', storyData=nodeData)
         tmp_nodeData_type = OlivaStoryCore.storyEngine.getStoryNodeDataForStoryData(dataKey='type', storyData=nodeData)
-        if tmp_nodeData_type == None:
+        if tmp_nodeData_type is None:
             if len(selection) > 0:
                 tmp_selection_list = []
                 for i in range(len(selection)):
@@ -477,7 +477,7 @@ def getStoryTall(plugin_event, dictStrCustom, dictTValue, nodeData, flagIsStart=
                             content_type=10,
                             content=json.dumps(msg_list, ensure_ascii=False),
                         )
-            except Exception as e:
+            except Exception:
                 traceback.print_exc()
 
         elif tmp_platform == 'mhyVila':
@@ -513,7 +513,7 @@ def getStoryTall(plugin_event, dictStrCustom, dictTValue, nodeData, flagIsStart=
                             content=msg_list,
                             host_id=plugin_event.data.host_id,
                         )
-            except Exception as e:
+            except Exception:
                 traceback.print_exc()
     return res
 

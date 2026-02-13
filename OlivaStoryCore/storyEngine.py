@@ -1,3 +1,19 @@
+# -*- encoding: utf-8 -*-
+r"""
+_______________________    _________________________________________
+__  __ \__  /____  _/_ |  / /__    |__  __ \___  _/_  ____/__  ____/
+_  / / /_  /  __  / __ | / /__  /| |_  / / /__  / _  /    __  __/
+/ /_/ /_  /____/ /  __ |/ / _  ___ |  /_/ /__/ /  / /___  _  /___
+\____/ /_____/___/  _____/  /_/  |_/_____/ /___/  \____/  /_____/
+
+@File      :   storyEngine.py
+@Author    :   lunzhiPenxil仑质
+@Contact   :   lunzhipenxil@gmail.com
+@License   :   AGPL
+@Copyright :   (C) 2020-2026, OlivOS-Team
+@Desc      :   None
+"""
+
 import OlivaDiceCore
 import OlivaStoryCore
 
@@ -9,7 +25,7 @@ import codecs
 
 try:
     import pyjson5
-except:
+except Exception:
     pass
 
 storyList = {}
@@ -54,9 +70,9 @@ def initStoryListByBotHash(botHash: str):
                 filePath_fs = formatUTF8WithBOM(filePath_f.read()).decode('utf-8')
                 try:
                     objStoryThis = pyjson5.loads(filePath_fs)
-                except:
+                except Exception:
                     objStoryThis = json.loads(filePath_fs)
-        except:
+        except Exception:
             traceback.print_exc()
             OlivaStoryCore.msgReply.globalLog(
                 level=3,
@@ -145,7 +161,6 @@ def getStoryNodeByFlag(storyName, flag, botHash):
 
 
 def getStoryNodeDataForStoryData(dataKey: str, storyData: dict):
-    global storyNodeDefault
     res = None
     if storyData is not None:
         res = storyData.get(dataKey, copy.deepcopy(storyNodeDefault.get(dataKey, None)))
@@ -228,7 +243,7 @@ def runStoryBySelectionIndex(
             tmp_storyNode_selection = getStoryNodeDataForStoryData(dataKey='selection', storyData=tmp_storyNode)
             tmp_storyNode_type = getStoryNodeDataForStoryData(dataKey='type', storyData=tmp_storyNode)
             selectionIndex_new = None
-            if tmp_storyNode_type == None and type(selectionIndex) is int:
+            if tmp_storyNode_type is None and type(selectionIndex) is int:
                 selectionIndex_new = selectionIndex
             elif tmp_storyNode_type == 'ra' and selectionIndex == 'ra':
                 tmp_storyNode_raSkillName = getStoryNodeDataForStoryData(dataKey='raSkillName', storyData=tmp_storyNode)
@@ -272,7 +287,7 @@ def runStoryBySelectionIndex(
                             try:
                                 tmp_storyNode_raMap_item_para = tmp_storyNode_raMap_item_para.format_map(tmp_value_dict)
                                 res_this = eval(tmp_storyNode_raMap_item_para)
-                            except:
+                            except Exception:
                                 res_this = False
                                 traceback.print_exc()
                             if type(res_this) is not bool:
